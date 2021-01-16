@@ -1,0 +1,12 @@
+Alias /laravel C:/Apache24/htdocs/laravel/public/
+<VirtualHost *:80>
+    ServerName localhost
+    DocumentRoot C:/Apache24/htdocs/laravel/public
+
+    <Directory "C:/Apache24/htdocs/laravel/public">
+        Options FollowSymlinks Includes
+        #AddType text/html .html .php
+        Require all granted
+        AllowOverride All
+    </Directory>
+</VirtualHost>
