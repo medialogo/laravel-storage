@@ -63,6 +63,11 @@ return [
             'bucket' => env('AWS_BUCKET'),
             'url' => env('AWS_URL'),
         ],
+        // custom
+        'doc' => [
+            'driver' => 'local',
+            'root' => 'C:\doc'
+        ],
 
     ],
 

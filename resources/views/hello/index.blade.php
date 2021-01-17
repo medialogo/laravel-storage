@@ -72,15 +72,41 @@
         </style>
     </head>
     <body>
-        <h1>Hello/Index</h1>
+        <h1>{{$path}}</h1>
+        @if ($path != 'C:/doc/')
+        <a href="{{url()->previous()}}">戻る</a>
+        @endif
+        <p>{{$dcount}} dirs; &nbsp;&nbsp; {{$fcount}} files</p>
         <table>
         <tr><th>url</th><th>size</th><th>last modified</th></tr>
-        @foreach($files as $item)
-        <tr>
-            <td>{{$item['url']}}</td>
-            <td>{{$item['size']}}</td>
-            <td>{{$item['lastModified']}}</td>
-        </tr>
-        @endforeach
+        @if ($dirs)
+            @foreach($dirs as $item)
+            <tr>
+                <td>
+                @if ($item['size'])
+                <a href="{{url()->current()}}/{{$item['url']}}">{{$item['url']}}</a></td>
+                @else
+                {{$item['url']}}
+                @endif
+                <td>{{$item['size']}}</td>
+                <td>{{$item['lastModified']}}</td>
+            </tr>
+            @endforeach
+        @endif
+        @if ($files)
+            @foreach($files as $item)
+            <tr>
+                <td>
+                <!-- <a href="file:///{{$item['path']}}"> -->
+                {{$item['url']}}
+                <!-- </a> -->
+                </td>
+                <td>{{$item['size']}}</td>
+                <td>{{$item['lastModified']}}</td>
+            </tr>
+            @endforeach
+        @endif
+        </table>
+
     </body>
 </html>

@@ -14,6 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/hello', 'HelloController@index')->name('hello');
-Route::get('/hello/{msg}', 'HelloController@other');
+// Route::get('/FS/', 'FSController@index')->name('hello');
+Route::get('/FS/{url?}', 'FSController@index')->where('url','.+');
+// Route::get('/hello/{msg}', 'HelloController@other');
 
