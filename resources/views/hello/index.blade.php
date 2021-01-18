@@ -70,13 +70,39 @@
                 padding:10px;
             }
         </style>
+        <script type="text/javascript">
+            function setFileName() {
+                var files = document.getElementById('file').files;
+                var names = '';
+                if (files.length > 0) {
+                    names = files[0].name;
+                    for (var i=1; i< files.length; i++) {
+                        names += '<br>' + files[i].name;
+                    }
+                }
+                document.getElementById('filename').value = names;
+                console.log(names);
+            }
+        </script>
     </head>
     <body>
         <h1>{{$path}}</h1>
-        @if ($path != 'C:/doc/')
-        <a href="{{url()->previous()}}">戻る</a>
-        @endif
-        <p>{{$dcount}} dirs; &nbsp;&nbsp; {{$fcount}} files</p>
+        <form method="POST" action="/FS/upload/" enctype="multipart/form-data">
+
+        {{ csrf_field() }}
+
+        <div>
+            <label for="file">ファイルを選択して、[アップロード]ボタンを押してください</label><br>
+            <input type="file" id="file" name="file" onchange="setFileName()">
+            <input type="hidden" id="filename" name="filename" />
+            <input type="hidden" id="currentdir" name="currentdir" value="{{url()->current()}}"/> 
+        </div>
+        <div>
+            <input type="submit" value="アップロード">
+        </div>
+        </form>
+        <p>{{$dcount}} dirs; &nbsp;&nbsp; {{$fcount}} files @if ($parent)<a href="{{$parent}}">上へ</a>@endif
+
         <table>
         <tr><th>url</th><th>size</th><th>last modified</th></tr>
         @if ($dirs)
@@ -107,6 +133,5 @@
             @endforeach
         @endif
         </table>
-
     </body>
 </html>

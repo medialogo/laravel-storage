@@ -15,6 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 // Route::get('/FS/', 'FSController@index')->name('hello');
-Route::get('/FS/{url?}', 'FSController@index')->where('url','.+');
-// Route::get('/hello/{msg}', 'HelloController@other');
+Route::get('/FS/{url?}', 'FSController@index')->where('url','.*')->name('index');
+Route::post('/FS/upload/{url?}', 'FSController@upload')->where('url','.*');
 
