@@ -19,7 +19,10 @@ class FSController extends Controller
         $base = $this->base;
 
         $dir = $url;
-        $data['path'] = 'C:/' . $base . '/' . $url;
+        $data['path'] = 'C:/' . $base;
+        if ($url && ($url != '/')) {
+            $data['path'] .=  '/' . $url;
+        }
 
         $data['parent'] = '';
         if ($url !== '') {
@@ -79,44 +82,83 @@ class FSController extends Controller
     }
 
 
-    public function upload(Request $request, $url = '') 
+    public function upload(Request $request) 
     {
         $base = $this->base;
-        $currentdir = $request->currentdir;
-        if ($currentdir != '') {
+        $currentdir = urldecode($request->currentdir);
+        if ($currentdir) {
+            $dirlen = mb_strlen($currentdir); 
             $pos = mb_strrpos($currentdir, '/FS');
-            if ($pos > 0) {
-                $currentdir = mb_substr($currentdir, ($pos + 3) );
-                if (mb_substr($currentdir, 0, 1) == '/') {
-                    $currentdir = mb_substr($currentdir, 1);
+            print "len=$dirlen, pos=$pos";
+            if (($pos > 0 ) && (($dirlen - $pos) >= 3)) {
+                $currentdir = mb_substr($currentdir, ($pos + 4) );
+                if ($currentdir == '/') {
+                    $currentdir = '';
                 }
             }
         }
-
-        print $currentdir;
-        var_dump($request->file('file'));
-        print $request->filename;
-        // return;
+        
+        // print "filename:" . $request->filename . "<br>";
+        // print "currentdir:" . $currentdir . "<br>";
         $dir = $currentdir;
-        $path = 'C:/' . $base .  '/' . $dir;
+        $path = 'C:/' . $base;
+        if ($dir) {
+            $path .= '/' . $dir;
+        }
         $data['path'] = $path;
+        // print "path: " . $data['path'] . "<br>";;
 
         $data['parent'] = '';
-        if ($dir !== '') {
-            $req_url = $request->url();
-            $strlen = mb_strlen($req_url);
-            if (mb_substr($req_url, ($strlen - 1) ,1) == '/') {
-                $req_url = mb_substr($req_url, 0, ($strlen - 1));
+        if ($dir) {
+            $strlen = mb_strlen($dir);
+            if (mb_substr($dir, ($strlen - 1) ,1) == '/') {
+                $dir = mb_substr($dir, 0, ($dir - 1));
             }
             $pos = 0;
             do  {
-                $pos = mb_strrpos($req_url, '/');
+                $pos = mb_strrpos($dir, '/');
             } while($pos === 0);
-            $data['parent'] = mb_substr($req_url, 0, $pos); 
+            $data['parent'] = mb_substr($dir, 0, $pos); 
         }
+        // print "parent: " . $data['parent'] . "<br>";;
+        // return;
 
-        Storage::disk($base)->putFileAs('/' .$dir, $request->file('file'), $request->filename);
+        Storage::disk($base)->putFileAs($dir, $request->file('file'), $request->filename);
         
         return redirect()->route('index', ['url'=>$dir]);
     }
-}
+
+    public function delete(Request $request) 
+    {
+        $base = $this->base;
+        $currentdir = urldecode($request->currentdir2);
+        if ($currentdir) {
+            $dirlen = mb_strlen($currentdir); 
+            $pos = mb_strrpos($currentdir, '/FS');
+            if (($pos > 0 ) && (($dirlen - $pos) >= 3)) {
+                $currentdir = mb_substr($currentdir, ($pos + 4) );
+                if ($currentdir == '/') {
+                    $currentdir = '';
+                }
+            }
+        }
+        print $currentdir;
+        $items = explode(';', urldecode($request->selectedFiles));
+
+        $dir = $currentdir;
+        $path = 'C:/' . $base;
+        if ($dir) {
+            $path .= '/' . $dir;
+        }
+        $data['path'] = $path;
+
+        $data['parent'] = '';
+        if ($dir) {
+            $strlen = mb_strlen($dir);
+            if (mb_substr($dir, ($strlen - 1) ,1) == '/') {
+                $dir = mb_substr($dir, 0, ($dir - 1));
+            }
+            $pos = 0;
+            do  {
+                $pos = mb_strrpos($dir, '/');
+            } while($pos === 0);

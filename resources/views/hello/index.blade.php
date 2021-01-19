@@ -83,6 +83,38 @@
                 document.getElementById('filename').value = names;
                 console.log(names);
             }
+            function countItems() {
+                var checked = 0;
+                var nameList = [];
+                if (document.form2.dirItems) {
+                    document.form2.dirItems.forEach(function(item) {
+                        if (item.checked) {
+                            checked++;
+                        }
+                    }); 
+                }
+                if (document.form2.fileItems) {
+                    var i = 0;
+                    document.form2.fileItems.forEach(function(item) {
+                        if (item.checked) {
+                            checked++;
+                            nameList.push(document.form2.fileItems[i].id)
+                        }
+                        i++;
+                    }); 
+                }
+                console.log("checked: " + checked);
+                console.log( nameList.join(';'));
+
+                document.form2.selectedFiles.value =  nameList.join(';');
+                var htmlText = ''
+                if (checked) {
+                    htmlText = checked + '個の項目が選択されました。' 
+                } else {
+                    htmlText  = '項目が選択されていません'
+                }
+                document.getElementById("selectedInfo").innerHTML =  htmlText
+            }
         </script>
     </head>
     <body>
@@ -102,19 +134,26 @@
         </div>
         </form>
         <p>{{$dcount}} dirs; &nbsp;&nbsp; {{$fcount}} files @if ($parent)<a href="{{$parent}}">上へ</a>@endif
+        <div id="selectedInfo"></div>
 
+        <form name="form2" action="/FS/delete/" method="POST">
+        {{ csrf_field() }}
+        選択された項目を <input type='submit' value='削除'>"
+        <input type="hidden" id="selectedFiles" name="selectedFiles"/> 
+        <input type="hidden" id="currentdir2" name="currentdir2" value="{{url()->current()}}"/> 
         <table>
-        <tr><th>url</th><th>size</th><th>last modified</th></tr>
+        <tr><th></th><th>url</th><th>size</th><th>last modified</th></tr>
         @if ($dirs)
             @foreach($dirs as $item)
             <tr>
+            <td><input type="checkbox" id="dirItems" name="dirItems"  onclick="countItems()"></td>
                 <td>
                 @if ($item['size'])
                 <a href="{{url()->current()}}/{{$item['url']}}">{{$item['url']}}</a></td>
                 @else
                 {{$item['url']}}
                 @endif
-                <td>{{$item['size']}}</td>
+                <td>&nbsp;</td>
                 <td>{{$item['lastModified']}}</td>
             </tr>
             @endforeach
@@ -122,16 +161,18 @@
         @if ($files)
             @foreach($files as $item)
             <tr>
+            <td><input type="checkbox" id="{{$item['url']}}" name="fileItems" onclick="countItems()"></td>
                 <td>
                 <!-- <a href="file:///{{$item['path']}}"> -->
                 {{$item['url']}}
                 <!-- </a> -->
                 </td>
-                <td>{{$item['size']}}</td>
+                <td style="text-align:right">{{number_format($item['size'])}}</td>
                 <td>{{$item['lastModified']}}</td>
             </tr>
             @endforeach
         @endif
         </table>
+        </form>
     </body>
 </html>

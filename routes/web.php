@@ -17,4 +17,5 @@ Route::get('/', function () {
 // Route::get('/FS/', 'FSController@index')->name('hello');
 Route::get('/FS/{url?}', 'FSController@index')->where('url','.*')->name('index');
 Route::post('/FS/upload/{url?}', 'FSController@upload')->where('url','.*');
+Route::post('/FS/delete', 'FSController@delete');
 
