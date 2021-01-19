@@ -162,3 +162,12 @@ class FSController extends Controller
             do  {
                 $pos = mb_strrpos($dir, '/');
             } while($pos === 0);
+            $data['parent'] = mb_substr($dir, 0, $pos); 
+        }
+        foreach ($items as $item) {
+            Storage::disk($base)->delete($dir . '/' . $item);
+        }
+        
+        return redirect()->route('index', ['url'=>$dir]);
+    }    
+}
