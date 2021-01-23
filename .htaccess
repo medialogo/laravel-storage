@@ -1,7 +1,12 @@
+AuthUserFile /home/cat-odoriba/.htpasswd
+AuthName "Please enter your ID and Password"
+AuthType Basic
+require valid-user
+
+
 <IfModule mod_rewrite.c>
    RewriteEngine on
    #RewriteBase /storage
-
    RewriteRule ^$ public [L]
    RewriteRule (^[^/]*$) public/$1 [L]
    RewriteRule (^.*$) public/$1 [L]

@@ -11,7 +11,7 @@ class FSController extends Controller
 
     public function __construct() 
     {
-        $this->base = 'doc';
+        $this->base = 'public';
     }
 
     public function index(Request $request, $url = '') 
@@ -19,7 +19,7 @@ class FSController extends Controller
         $base = $this->base;
 
         $dir = $url;
-        $data['path'] = 'C:/' . $base;
+        $data['path'] =  $base;
         if ($url && ($url != '/')) {
             $data['path'] .=  '/' . $url;
         }
@@ -62,7 +62,7 @@ class FSController extends Controller
         $items = [];
         foreach ($urls as $url) {
             $item = [];
-            $item['path'] = 'C:/' . $base . '/' . $url;
+            $item['path'] = $base . '/' . $url;
             $paths = explode('/', $url);
             $item['url'] = $paths[count($paths) - 1];
             $item['size'] = '';
@@ -89,7 +89,6 @@ class FSController extends Controller
         if ($currentdir) {
             $dirlen = mb_strlen($currentdir); 
             $pos = mb_strrpos($currentdir, '/FS');
-            print "len=$dirlen, pos=$pos";
             if (($pos > 0 ) && (($dirlen - $pos) >= 3)) {
                 $currentdir = mb_substr($currentdir, ($pos + 4) );
                 if ($currentdir == '/') {
@@ -101,7 +100,7 @@ class FSController extends Controller
         // print "filename:" . $request->filename . "<br>";
         // print "currentdir:" . $currentdir . "<br>";
         $dir = $currentdir;
-        $path = 'C:/' . $base;
+        $path =  $base;
         if ($dir) {
             $path .= '/' . $dir;
         }
@@ -142,11 +141,11 @@ class FSController extends Controller
                 }
             }
         }
-        print $currentdir;
+        
         $items = explode(';', urldecode($request->selectedFiles));
 
         $dir = $currentdir;
-        $path = 'C:/' . $base;
+        $path = $base;
         if ($dir) {
             $path .= '/' . $dir;
         }

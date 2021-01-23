@@ -66,7 +66,7 @@ return [
         // custom
         'doc' => [
             'driver' => 'local',
-            'root' => 'C:\doc'
+            'root' => '/home/cat-odoriba/storage'
         ],
 
     ],

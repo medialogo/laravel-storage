@@ -14,8 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
-// Route::get('/FS/', 'FSController@index')->name('hello');
-Route::get('/FS/{url?}', 'FSController@index')->where('url','.*')->name('index');
-Route::post('/FS/upload/{url?}', 'FSController@upload')->where('url','.*');
-Route::post('/FS/delete', 'FSController@delete');
+#Route::get('/disk/FS', 'FSController@index')->name('index');
+Route::get('/disk/FS/{url?}', 'FSController@index')->where('url','.*')->name('index');
+Route::post('/disk/FS/upload/{url?}', 'FSController@upload')->where('url','.*');
+Route::post('/disk/FS/delete', 'FSController@delete');
 

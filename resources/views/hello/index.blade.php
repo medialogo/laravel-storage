@@ -119,7 +119,7 @@
     </head>
     <body>
         <h1>{{$path}}</h1>
-        <form method="POST" action="/FS/upload/" enctype="multipart/form-data">
+        <form method="POST" action="/disk/FS/upload/" enctype="multipart/form-data">
 
         {{ csrf_field() }}
 
@@ -136,7 +136,7 @@
         <p>{{$dcount}} dirs; &nbsp;&nbsp; {{$fcount}} files @if ($parent)<a href="{{$parent}}">上へ</a>@endif
         <div id="selectedInfo"></div>
 
-        <form name="form2" action="/FS/delete/" method="POST">
+        <form name="form2" action="/disk/FS/delete/" method="POST">
         {{ csrf_field() }}
         選択された項目を <input type='submit' value='削除'>"
         <input type="hidden" id="selectedFiles" name="selectedFiles"/> 
